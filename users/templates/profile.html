@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원정보변경</title>
+</head>
+<body>
+    <form action="{% url 'users:userupdate' %}" method="POST">
+        {% csrf_token %}
+          <div>
+            이메일 : <input type="email" id="email" name="email" value="{{ user.email }}">
+          </div>
+          <div>
+            이름 : <input type="text" class="form-control" id="name" name="username" value="{{ user.first_name }}"> 
+          </div>
+          <div>
+            새 비밀번호 : <input type="password" id="new_user_pw" name="new_user_pw" placeholder="변경할 비밀번호를 입력하세요.">
+          </div>
+          <button type="submit" class="btn btn-primary">수정하기</button>
+      </form>
+    
+</body>
+</html>
