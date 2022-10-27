@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>팔로우리스트페이지</title>
+</head>
+<body>
+    <h1 팔로우 리스트></h1>
+    {% for person in user_list %}
+    <h2 class="card-title">{{ person.username }}</h2>
+    <h3 class="card-subtitle mb-2 text-muted">{{ person.email }}</h3>
+    팔로잉 {{ person.follow.count}} 명 / 팔로워 {{ person.followee.count }} 명
+    {% if person in user.follow.all %}
+    <a href= "{% url 'users:user_follow' person.id %}">[팔로우 취소]</a>
+    {% else %}
+    <a href= "{% url 'users:user_follow' person.id %}">[팔로우]</a>
+    {% endif %}
+    {% endfor %}
+    
+</body>
+</html>

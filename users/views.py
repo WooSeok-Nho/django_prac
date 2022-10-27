@@ -1,9 +1,11 @@
+import profile
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import User
 from django.contrib.auth import authenticate, login as loginsession
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
 
 
 # Create your views here.
@@ -37,37 +39,51 @@ def login(request):
         else:
             return render(request, 'login.html', {'error':'이메일 인증 or 이메일 패스워드를 확인해 주세요!'})
 
-
+@login_required
 def logout(request):
         auth.logout(request)
         return redirect('users:login')
 
+@login_required
 def delete(request):
-        user = request.user
-        user.delete()
+    if request.user.is_authenticated:
+        request.user.delete()
         logout(request)
-        return render(request, 'login.html')
+    return render(request, 'login.html')
+
+
+def update(request ,id):
+    if request.method == "GET":
+        return render(request, 'profile.html')
+    elif request.method == "POST":
+        user = User.objects.get(id=id)
+        user.email = request.POST.get("email")
+        user.username = request.POST.get("username")
+        user.nickname = request.POST.get("nickname")
+        origin_password = request.POST["origin_password"]
+        check = check_password(origin_password, user.password)
+        if check:
+            new_password = request.POST["new_password"]
+            user.set_password(new_password)
+            user.save()
+            return redirect("/")
+@login_required
+def user_follow(request, id):
+    me = request.user
+    click_user = User.objects.get(id=id)
+    if me in click_user.followee.all():
+        click_user.followee.remove(request.user)
+    else:
+        click_user.followee.add(request.user)
+    return redirect(request.META['HTTP_REFERER'])   
+    
+
 
 @login_required
-def userupdate(request):
+def follow_view(request): #
     if request.method == 'GET':
-        return render(request, 'profile.html')
-    elif request.method == 'POST':
-        user = request.user
-
-        email = request.POST.get('email')
-        username = request.POST.get('username')
-        new_user_pw = request.POST.get('new_user_pw')
-
-        user.email = email
-        user.first_name = username
-        user.set_password(new_user_pw)
-
-        user.save()
-
-
-        return redirect('/')
-
+        user_list = User.objects.all().exclude(email=request.user.email)
+        return render(request, 'follow.html',{"user_list":user_list})
 
 
 

@@ -7,18 +7,31 @@
     <title>홈페이지</title>
 </head>
 <body>
-    {{ users }}
     <br>
-    {% for user in users %}
      {{ user.email }}
      {{ user.nickname }}
      {{ user.username }}
-     {% endfor %}
      <br>
     <br>
     <a href = "{% url "users:logout" %}">로그아웃</a>
     <a href = "{% url "users:delete" %}">회원탈퇴</a>
+    <a href = "{% url "users:update" user.id %}">내정보변경</a>
+    <a href = "{% url "contents:post" %}">게시글작성하러가기</a>
     <br>
+    <br>
+    {% for post in posts %}
+    <br>
+    {{ post.title }}
+    {{ post.content }}
+    <a href="{% url 'contents:postdelete' post.id %}">게시글삭제</a>
+    <a href="{% url 'contents:postupdate' post.id %}">게시글수정</a>
+    <br>
+    {% endfor %}
+    <br>
+    <a href="{% url 'users:follow_view' %}">팔로우하러가기</a>
+    
+
+
 
     
     
