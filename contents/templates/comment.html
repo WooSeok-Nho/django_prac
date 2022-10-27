@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>댓글 작성</title>
+</head>
+<body>
+    <form method="POST" action="{% url "contents:write_comment" post.id %}">
+    {% csrf_token %}
+    <div>
+    제목: <input type="text" id="title" name="title"value="{{ post.title }}> 
+    </div>
+    <div>
+    <div> 내용:<textarea name="content">{{ post.content }}</textarea>
+    </div>
+    <button>게시글작성</button>
+
+
+
+    </form>
+    
+</body>
+</html>

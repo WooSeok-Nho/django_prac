@@ -23,8 +23,33 @@
     <br>
     {{ post.title }}
     {{ post.content }}
+    <br>
+    {% for comment in post.comment%}
+    <br>
+    {{ comment.user.email }}
+    {{ comment.content }}
+    <br>
+    {% if request.user == comment.user %}
+    <button onclick="location.href='{% url "contents:comment_delete" comment.id %}'" >삭제</button
+    {% endif %}
+    <br>
+    {% endfor %}
+    <br>
+    <form method="POST" action="{% url "contents:write_comment" post.id %}">
+        {% csrf_token %}
+        <div> 내용:<textarea name="content"></textarea>
+        </div>
+        <button type = "submit">댓글입력</button>
+    </form>
+
+
+
+
     <a href="{% url 'contents:postdelete' post.id %}">게시글삭제</a>
     <a href="{% url 'contents:postupdate' post.id %}">게시글수정</a>
+    좋아요 {{ post.like_authors.count }} 명
+    <a href="{% url 'contents:like' post.id %}">좋아요</a>
+
     <br>
     {% endfor %}
     <br>
